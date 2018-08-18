@@ -1,0 +1,148 @@
+@font-face {
+font-family: 'iconfont';
+src: url('//at.alicdn.com/t/font_1463147324_946932.eot'); /* IE9*/
+src: url('//at.alicdn.com/t/font_1463147324_946932.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+url('http://at.alicdn.com/t/font_1463147324_946932.woff') format('woff'), /* chrome、firefox */
+url('http://at.alicdn.com/t/font_1463147324_946932.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+url('//at.alicdn.com/t/font_1463147324_946932.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+
+a{text-decoration: none}
+input:focus{
+outline: none;
+background: #f5f2ef;
+}
+input{
+height: 40px;
+width: 190px;
+padding: 0 35px;
+margin:15px 0;
+border: none;
+background-color: rgba(255,255,255,0.4);
+color: rgb(98,94,91);
+box-shadow:
+0px 1px 1px rgba(255,255,255,0.7),
+inset 0px 2px 5px #aaaaaa;
+border-radius: 5px;
+}
+form{
+position: relative;
+width: 260px;
+height: 260px;
+margin: 35px auto;
+padding: 30px;
+box-shadow:0px 1px 2px 1px #aaaaaa,
+inset 0px 1px 1px rgba(255,255,255,0.7);
+border-radius: 3px;
+}
+.yonghu{
+font-family: iconfont;
+position: absolute;
+top: 78px;
+left: 40px;
+z-index: 20;
+opacity: 0.7
+}
+.mima{
+font-family: iconfont;
+position: absolute;
+top: 170px;
+left: 40px;
+z-index: 20;
+opacity: 0.7
+}
+*{
+    padding:0;
+    margin:0;
+}
+html,body {
+background: #fff;
+width: 100%;
+height: 100%;
+display: flex;
+flex-flow: column nowrap;
+justify-content: center;
+align-items: flex-start;
+background: url('../img/bg.jpg');
+background-size: 100%;
+background-repeat: no-repeat;
+}
+.wrapper{text-align: center;padding-left:120px;}
+.login-bottom{
+    position: absolute;
+    bottom: 10px;
+    right:0;
+    padding-right:30px;
+    font-size: 13px
+}
+.btn{
+    margin-top:20px;
+    width: 100%;
+    height: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    background: -moz-linear-gradient(
+            top,
+            #94aa64 0%,
+            #7a924a 50%,
+            #607738);
+    background: -webkit-gradient(
+            linear, left top, left bottom,
+            from(#94aa64),
+            color-stop(0.50, #7a924a),
+            to(#607738));
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #7d8862;
+    -moz-box-shadow:
+            0px 1px 0px rgba(170,170,170,1),
+            inset 0px 1px 1px rgba(255,255,255,0.7);
+    -webkit-box-shadow:
+            0px 1px 0px rgba(170,170,170,1),
+            inset 0px 1px 1px rgba(255,255,255,0.7);
+    box-shadow:
+            0px 1px 0px rgba(170,170,170,1),
+            inset 0px 1px 1px rgba(255,255,255,0.7);
+    text-shadow:
+            0px -1px 0px rgba(000,000,000,0.3),
+            0px 0px 0px rgba(255,255,255,0);
+}
+.btn:hover{
+    opacity: 0.8;
+}
+.btn:active{
+    width: 100%;
+    height: 40px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    background: -moz-linear-gradient(
+            top,
+            #607738 0%,
+            #7a924a 50%,
+            #94aa64 );
+    background: -webkit-gradient(
+            linear, left top, left bottom,
+            from(#607738),
+            color-stop(0.50, #7a924a),
+            to(#94aa64));
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: 1px solid #7d8862;
+    -moz-box-shadow:
+            0px -1px 0px rgba(170,170,170,1),
+            inset 0px -1px 1px rgba(255,255,255,0.7);
+    -webkit-box-shadow:
+            0px -1px 0px rgba(170,170,170,1),
+            inset 0px -1px 1px rgba(255,255,255,0.7);
+    box-shadow:
+            0px -1px 0px rgba(170,170,170,1),
+            inset 0px -1px 1px rgba(255,255,255,0.7);
+    text-shadow:
+            0px 1px 0px rgba(000,000,000,0.3),
+            0px 0px 0px rgba(255,255,255,0);
+}

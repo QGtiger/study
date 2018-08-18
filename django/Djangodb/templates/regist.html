@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="UTF-8">
+        <title>注册</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    </head>
+    <body>
+        {% if registError %}
+            {{ registError }}
+            <br>
+            <a href="http://127.0.0.1:8000/regist/">返回重新注册</a>
+        {% endif %}
+        {% if Method == 'GET' %}
+        <div class="wrapper">
+            <form method ="post">
+                <span class="yonghu"></span>
+                <span class="mima"></span>
+                {% csrf_token %}
+                {{uf.as_p}} <!-- 按照 p 标签格式显示-->
+                <button type="submit" name="regist" class="btn">注册</button>
+
+                <div class="login-bottom">
+                    <a href="http://127.0.0.1:8000/login/" >我已有账号,去登陆</a>
+
+                </div>
+            </form>
+        </div>
+        {% else %}
+            {% if name %}
+                {{ name }} 注册成功!
+                <br>
+                <a href="http://127.0.0.1:8000/login/">去登陆</a>
+                {% elif registJudge %}
+                {{ registJudge }} 用户已经存在请重新注册!
+                <br>
+                <a href="http://127.0.0.1:8000/regist/">返回重新注册</a>
+            {% endif %}
+
+        {% endif %}
+    </body>
+</html>
