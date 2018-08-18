@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="GBK">
+    <title>Django-Database撒旦</title>
+    <style>
+    	li{
+    		list-style: decimal
+    	}
+    </style>
+</head>
+<body>
+    {% if addJudge %}
+        {{ addJudge.btitle }}已经存在
+        <h1>hhh</h1>
+    {% endif %}
+	<!-- <a href="/addBook/">创建</a> -->
+    <form action="/addBook/" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn" >注册</button>
+    </form>
+<ul>
+{% for book in books %}
+<li>{{book.btitle}}---{{book.bpub_date|date:"Y-m-d"}}---{{book.sub_date|date:"Y-m-d H-i-s"}}--<a href="/delBook/{{book.id}}/">删除</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>
