@@ -1,3 +1,8 @@
+"""
+time:2018.9.27
+author:lightfish
+爬取豆瓣top250书籍
+"""
 from lxml import etree
 import requests
 import csv
