@@ -1,3 +1,8 @@
+"""
+time:2018.9.27
+author:lightfish
+爬取网址http://www.doupoxs.com/doupocangqiong，爬取斗破，并用jieba.analyse分析数据
+"""
 import requests
 import re
 import time
