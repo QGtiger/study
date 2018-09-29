@@ -9,6 +9,9 @@ print(df1)
 # index没有显示指定时，创建range(0,len(dict))
 dic={'数学':[25.1,26,27,28],'语文':98,'名字':['Dkd','Hff','Zfs','Lghgd']}
 df2=pd.DataFrame(dic)
+table=pd.DataFrame(df2)
+#需要安装openpyxl,to_excel()函数
+table.to_excel("app2.xlsx")
 print(df2)
 print("==================行索引===================")
 print(df2.index)
