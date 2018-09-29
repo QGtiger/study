@@ -22,6 +22,9 @@ def get_page(start, end, page, dict):
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.list .item')))
         get_info(dict)
     except TimeoutException:
+        browser.refresh()
+        reget=wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,'#j_submit')))
+        reget.click()
         get_page(start, end, page, dict)
 
 def get_info(dict):
@@ -33,8 +36,8 @@ def get_info(dict):
         dict['评价'].append(item.find('.point').text()[:3])
         dict['价格'].append(item.find('.pack').text())
         dict['住处'].append(item.find('.h_title').text())
-        dict['去程'].append(item.find('.c1 .a_name').text().replace('"',''))
-        dict['去程时间'].append((item.find('.cf>.c2').text()))
+        dict['去程'].append(item.find('div:nth-child(2) > div.c1').text().replace('"',''))
+        dict['去程时间'].append((item.find('div:nth-child(2) > div.c2').text()))
         dict['来程'].append(item.find('div:nth-child(3) > div.c1').text())
         dict['来程时间'].append(item.find('div:nth-child(3) > div.c1').text())
 
