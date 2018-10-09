@@ -10,8 +10,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from urllib import request
 from PIL import Image
-from urllib.parse import quote
-from pyquery import PyQuery as pq
+import re
+from bs4 import BeautifulSoup
 import pandas as pd
 
 browser=webdriver.Chrome()
@@ -27,11 +27,15 @@ def login(dict):
         passwd.clear()
         user.send_keys('15990184749')
         passwd.send_keys('qwer123qg')
-        captcha_link=browser.find_element_by_id('captcha_image').get_attribute('src')
-        request.urlretrieve(captcha_link,'capycha.jpg')
-        Image.open('capycha.jpg').show()
-        captcha_code=input('请输入验证码：')
-        browser.find_element_by_id('captcha_field').send_keys(captcha_code)
+        try:
+            captcha_link=browser.find_element_by_id('captcha_image').get_attribute('src')
+            request.urlretrieve(captcha_link,'capycha.jpg')
+            Image.open('capycha.jpg').show()
+            captcha_code=input('请输入验证码：')
+            browser.find_element_by_id('captcha_field').send_keys(captcha_code)
+        except:
+            print('不需要输入验证码！')
+            pass
         login_btn.click()
         search_movie=wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'#inp-query')))
         search_movie.clear()
@@ -49,29 +53,31 @@ def login(dict):
 def get_info(dict):
 
     print('just loading one...')
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.comment-item')))
     html=browser.page_source
     print(browser.current_url)
-    #print(html)
-    doc=pq(html)
-    EC.presence_of_element_located((By.CSS_SELECTOR,'.comment-item'))
-    items=doc('#comments .comment-item').items()
+    soup=BeautifulSoup(html,'html.parser')
+    items=soup.find_all(attrs={'class':'comment-item'})
+    print(items)
+    print(type(items))
     for item in items:
-        print(item('.comment-info>a').html())
-        dict['comment-info'].append(item.find('.comment-info>a').text())
-        print(item.find('.comment-info>a'))
-        dict['comment-star'].append(str(item.find('.comment-info span.rating').attr('class'))[7:8])
-        dict['comment-date'].append(item.find('.comment-info span.comment-time').text().strip())
-        dict['comment-vote'].append(item.find('.comment-vote span.votes').text())
-        dict['comments'].append(item.find('.comment p').text())
+        print(type(item))
+        #print(item)
+        dict['comment-info'].append(item.find(attrs={'class':'comment-info'}).find('a').get_text())
+        star=re.findall('<span .*?allstar(.*?)0.*?</span>',str(item))
+        dict['comment-star'].append(star[0] if len(star) else '')
+        dict['comment-date'].append(item.find(attrs={'class':'comment-time'}).get_text().strip())
+        dict['comment-vote'].append(item.find(attrs={'class':'votes'}).get_text())
+        dict['comments'].append(item.find('p').get_text())
     try :
         next_btn=wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR,'#paginator  a:last-child')))
         next_btn.click()
-        #get_info(dict)
+        get_info(dict)
     except TimeoutException:
         print('爬取达到上限！')
 
 if __name__=='__main__':
-    dict={
+    dict = {
         'comment-info':[],
         'comment-star':[],
         'comment-date':[],
