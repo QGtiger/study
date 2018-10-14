@@ -42,4 +42,19 @@ plt.ylim(-1.25, 1.25)
 #消除y轴的标识
 plt.yticks(())
 
+plt.figure(num='多组柱形图')
+year=[x for x in range(2007,2017)]
+total=[123,145,156,135,167,123,155,165,125,143]
+men=[56,78,45,68,61,62,63,64,65,66]
+women=[x for x in range(60,70)]
+x=np.arange(len(year))
+width=0.25
+#其中的width是现实宽度
+plt.bar(x,total,width,alpha=0.8)
+plt.bar(x+width,men,width,alpha=0.8)
+plt.bar(x+2*width,women,width,alpha=0.8)
+
+plt.xticks([x for x in range(10)],
+           year)
+
 plt.show()
