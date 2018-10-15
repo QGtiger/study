@@ -1,0 +1,13 @@
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
+browser = webdriver.Chrome()
+browser.refresh() 网页刷新
+browser.back() 网页后退
+browser.forward() 网页前进
+browser.execute_script('window.open()')  浏览器新打开一个选项卡
+browser.switch_to_window(browser.window_handles[i])  跳转到第i个选项卡 注意，当用browser.close()关闭一个选项卡的时候，一定要用
+switch_to_window(broswer.window_handles[i])来跳转到一个新选项卡，因为关闭，浏览器默认不会跳转
