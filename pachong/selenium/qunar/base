@@ -1,0 +1,13 @@
+"""
+author:lightfish
+Time:2018.10.15
+note:爬取去哪儿网的攻略 网址：http://travel.qunar.com/travelbook/list.htm
+"""
+programme = {
+            'title': item.find(attrs={'class':'tit'}).get_text(),
+            'date':item.find(attrs={'class':'date'}).get_text()[:-2],
+            'days':item.find(attrs={'class':'days'}).get_text() if item.find(attrs={'class':'days'}) else 'none',
+            '推荐':item.find(attrs={'class':'trip'}).get_text() if item.find(attrs={'class':'trip'}) else 'none',
+            '途径':item.find(attrs={'class':'places'}).get_text()[3:] if item.find(attrs={'class':'places'}) else 'none',
+            '行程':item.find(attrs={'class':'places'}).next_sibling.get_text()[3:] if item.find(attrs={'class':'places'}) else 'none'
+        }
