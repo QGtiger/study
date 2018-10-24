@@ -1,0 +1,5 @@
+author:lightfish
+Time:2018.10.24
+note:爬取b站的《工作细胞》的短评
+
+由于用requests.get()，爬取到中途会无法连接主机，所以推荐用selenium来进行爬取
