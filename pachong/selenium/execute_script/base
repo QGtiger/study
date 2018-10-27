@@ -1,0 +1,4 @@
+author:lightfish
+Time:2018.10.27
+note:G2加油,失败，由于虎牙好像会检测你是否是键盘输入，所以失败，但是python调用js代码可以学学
+browser.execute_script()调用js方法
