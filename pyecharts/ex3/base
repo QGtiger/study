@@ -1,0 +1,13 @@
+"""
+author:lightfish
+Time:2018.11.7
+note:pyecharts的学习
+"""
+
+#title_pos 标题位置  title-color 标题颜色 page_title='网页标题栏的名称' title_top='bottom' 标题在下方
+
+#is_label_show 显示每个点的值 is_legend_show显示每个颜色的属性
+# is_random为是否随即排列颜色列表（bool）
+# radius为半径，第一个为内半径，第二个是外半径
+# rosetype为是否展示成南丁格尔图:'radius' 圆心角展现数据半分比，半径展现数据大小;'area'圆心角相同，为通过半径展现数据大小(默认）
+# label_text_size为调整标签字体大小
