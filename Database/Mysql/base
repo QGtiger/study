@@ -114,6 +114,33 @@ except Exception as e:
 
 sql = 'SELECT * FROM students WHERE age>=20'
 
+#注意fetch方法内部实现有一个偏移，开始的fetchone()就获取了一条数据，所以后面的fetchall()只获取了总数减一条，因此我推荐后面
+#一种方法，用while方法加fetchone(),fetchall()会将结果以元组的形式全部返回，如果数据很大就占用的开销很大。
+try:
+    cursor.execute(sql)
+    print('Counts: '+cursor.rowcount)
+    one = cursor.fetchone()
+    print('One: '+one)
+    results = cursor.fetchall()
+    print('Results: '+results)
+    print('The type of results: '+type(results))
+    for row in results:
+        print(row)
+except Exception as e:
+    print(e)
+    
+#another way:   
+try:
+    cursor.execute(sql)
+    print('Counts: '+cursor.rowcount)
+    one = cursor.fetchone()#one是一个元组
+    while one:
+        print('Row: ',one)
+        one = cursor.fetchone()
+except Exception as e:
+    print(e)
+    
+
 
 
 
