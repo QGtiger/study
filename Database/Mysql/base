@@ -1,0 +1,122 @@
+"""
+author:lightfish
+Time:2018.11.7
+note:MySQL数据库的操作整合，MySQL是关系型数据库
+"""
+
+python
+连接MySQL
+import pymysql
+
+# 连接数据库
+db = pymysql.connect(host='localhost', user='root', password='', port=3306)
+# 获取数据库的游标
+cursor = db.cursor()
+cursor.execute('SELECT VERSION()')
+# 获取数据库的版本
+data = cursor.fetchone()
+print('Database version:' + data[0])
+# 创建了一个名为spider 的数据库，并且默认编码是utf-8
+cursor.execute('CREATE DATABASE spider DEFAULT CHARACTER SET utf8')
+# 选中数据库
+cursor.execute('USE spider')
+# 创建表
+sql = 'CREATE TABLE IF NOT EXISTS students (id VARCHAR(255) NOT NULL,name VARCHAR(25)NOT NULL,age INT NOT NULL,PRIMARY KEY (id))'
+cursor.execute(sql)
+
+# 插入数据
+id = '2016210405068'
+name = '言语'
+age = 18
+sql = 'INSERT INTO students(id,name,age) values(%s,%s,%s)'
+# 插入数据的标准写法
+try:
+    cursor.execute(sql, (id, name, age))
+    # 需要执行db对象的commit()方法才能实现数据的插入，对于数据的插入、更新、删除操作都需要调用
+    print('Sucessful insert...')
+    db.commit()
+except Exception as e:
+    print(e)
+    # 加了一层异常处理，如果执行失败，则调用rollback()函数来执行数据的回滚，相当于什么都没有发生
+    db.rollback()
+
+# 在很多情况下我们要达到的效果是插入方法无需改动，只需要传入一个字典就行，比如构造这个字典：
+data = {
+    'id': '2016210405068',
+    'name': 'lightfish',
+    'age': 22
+}
+
+table = 'students'
+keys = ','.join(data.keys())  # str类型
+values = ','.join(['%s'] * len(data))
+sql = 'INSERT INTO {table}({key}) VALUES({values})'.format(table=table, key=keys, values=values)
+try:
+    if cursor.execute(sql, tuple(data.values)):
+        print('Sucessful insert')
+        db.commit
+except Exception as e:
+    print(e)
+    db.rollback()
+
+# 更新数据
+# 修改数据
+sql = 'UPDATE students SET age=%s WHERE name=%s'
+try:
+    cursor.execute(sql, (22, 'Bob'))
+    db.commit()
+except Exception as e:
+    print(e)
+    db.rollback()
+
+# 下面介个很重要
+# 下面介个很重要
+# 下面介个很重要
+# 更新数据的时候，我们关心会不会出现重复的问题。所以我们这里可以再实现一种去重的方法，如果数据存在，则更新数据；否则插入数据
+data = {
+    'id': '2016210405068',
+    'name': '辰东',
+    'age': 33
+}
+
+table = 'students'
+keys = ','.join(data.keys())
+values = ','.join(['%s'] * len(data))
+
+# on duplicate key update
+
+sql = 'INSERT INTO {table}({keys}) VALUES ({values}) ON DUPLICATE KEY UPDATE'.format(table=table, keys=keys,
+                                                                                     values=values)
+update = ','.join([' {key}=%s'.format(key=key) for key in data.keys()])
+sql += update
+
+try:
+    cursor.execute(sql, tuple(data.values()) * 2)
+    print('Sucessfull insert...')
+    db.commit()
+except Exception as e:
+    print(e)
+    db.rollback()
+
+# 删除数据,删除操作就相对比较简单直接用DELETE语句就行，但是依然要用commit()函数才能生效
+table = 'students'
+conditions = 'age>20'
+sql = 'DELETE FROM {table} WHERE {condition}'.format(table=table, condition=conditions)
+try:
+    cursor.execute(sql)
+    print('Delete sucessfull...')
+    db.commit()
+except Exception as e:
+    print(e)
+    db.rollback()
+
+#查询数据库
+
+sql = 'SELECT * FROM students WHERE age>=20'
+
+
+
+
+
+
+
