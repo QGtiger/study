@@ -1,9 +1,19 @@
+"""
+author:lightfish
+Time:2018.11.8
+note:å‘æ•°æ®åº“ä¸­çµæ´»æ’å…¥æ•°æ®ï¼Œå­—å…¸çš„æ–¹å¼
+"""
+f = open(r'E:\python_project\weixin\è¡€å°æ¿.csv')
+df = pd.read_csv(f)
+print(np.random.choice(df['author']))
+
+s = '2016210'
 def input_data():
     for _ in range(15):
         data={
-            'id': input('ÊäÈëÑ§ºÅ£º'),
-            'name': input('ÊäÈëÃû×Ö£º'),
-            'age': int(input('ÊäÈëÄêÁä£º'))
+            'id': s+str(np.random.choice(np.arange(405068,406666))),
+            'name': np.random.choice(df['author']),
+            'age': np.random.randint(16,80)
         }
         insert_to_MySQL(data)
 
@@ -20,8 +30,8 @@ def insert_to_MySQL(data):
     sql += update
 
     try:
-        cursor.execute(sql, tuple(data.values()) * 2)
-        print('Sucessfull insert...')
+        if cursor.execute(sql, tuple(data.values()) * 2):
+            print('Sucessfull insert...')
         db.commit()
     except Exception as e:
         print(e)
