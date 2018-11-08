@@ -3,3 +3,114 @@ author:lightfish
 Time:2018.11.8
 note:MongoDB是一种非关系型数据库（文档型数据库），不需要经过SQL层的解析，数据之间没有耦合性，性能非常高
 """
+
+#启动mongodb服务，进入到mongodb的bin目录下，输入命令行 mongod --dbpath E://mongodb/data/db  
+#(记住该目录是在data的db下，这个路径你是自己创的，还有没有引号)
+#然后在bin目录下启动mongodb服务，可以直接双击mongo.exe或者在该目录下输入命令行  mongo.exe
+
+#连接MongoDB
+#这里需要安装pymongo
+import pymongo
+client = pymongo.MongoClient(host='localhost',port=27017)  #默认端口就是27017
+
+
+#指定数据库
+#MongoDB可以建立多个数据库
+db = client['mydb'] #这样就指定了这个mydb数据库，如果没有会自动创建
+
+#指定集合（collection），它们就类似关系型数据库的表
+collection = db['students']  #我们就指定了这个集合，如果没有我们就会创建一个
+
+
+#插入数据， 注意是以字典的形式
+student={
+  'id':20180101,
+  'name':'Jack',
+  'age':18,
+  'gender':'male'
+}
+#直接调用collection的insert()方法即可插入数据   最新官方推荐insert_one()插入一条数据，返回的不同，是InsertOneResult对象
+result = collection.insert(student)
+print(result)  #在MongoDB中都有一个_id属性来唯一标识，如果没有就会自动产生一个ObjectId类型的_id属性，返回_id值
+
+#当然也可以一次性插入多条数据  最新官方推荐 insert_many()来插入多条数据
+collection.insert([student1,student2]) #记得要以列表的形式
+
+#查询     我们可以用find_one()或者find()方法来进行查询，find()返回一个生成器对象
+
+result = collection.find_one({'name':'Mike'})
+#返回的是字典类型  查询不存在时，则会返回none 记住哦： 是字典类型
+
+results = collection.find({'age':20})
+for result in results:
+  print(result)
+  
+#查询年龄大于20的数据则写成
+results = collection.find({'age':{'$gt':20}}) 
+#这里查询的条件键值已经不是单纯的数字，而是一个字典，比较符号$gt 大于
+#下面是比较符号的一些归纳总结：
+
+"""
+符号     含 义       实 例
+$gt      大于      {'age':{'$gt':20}}
+$lt      小于      {'age':{'$lt':20}}
+$gte      >=       {'age':{'$gte':20}}
+$lte      <=      {'age':{'$lte':20}}
+$ne       !=      {'age':{'$ne':20}}
+$in      在范围内   {'age':{'$in':[20,23]}}
+$nin     不在范围内  {'age':{'$nin':[20,23]}}
+"""
+#还支持正则表达式 如下查询以M开头的数据
+results = collection.find({'name':{'$regex':'^M.*'}})
+
+#功能符号
+$exists   属性是否存在    {'name':{'$exists':True}}   name属性存在
+$where    高级条件查询    {'$where':'obj.fans_counts == obj.follows_counts'}   自身粉丝数等于关注数
+
+#计数
+#要统计查询的结果有多少条数据，可以调用count(),例如统计有多少数据
+count = collection.find().count()
+#或者统计符合某种条件的数据数,例如统计名字以a开头的
+count = collection.find({'name':{'$regex':'^a.*'}}).count()
+
+#排序，直接调用sort()方法，并在其中传入排序的字段以及升降标志
+#pymongo.ASCENDING 升序  pymongo.DESCENDING  降序
+results  = collection.find().sort('name',pymongo.ASCENDING)
+print(result['name'] for result in results)
+
+#偏移
+#在某些情况，我们只需要提取其中的几个元素，我就可以调用skip()方法，示例如下:
+results = collection.find().sort('name',pymongo.DESCENDING).skip(2)
+#这样我们就可以跳过前两个
+#另外，我们还可以用limit()方法来指定要去的个数,只取两个数据
+results = collection.find({'age':{'$gt':20}}).sort('name',pymongo.ASCENDING).skip(2).limit(2)
+
+#数据的更新
+#数据的更新
+#数据的更新
+#对于数据的更新，我们可以用update()方法
+condition={'name':'Mike'}
+student = collection.find_one(condition)
+student['age'] = 25
+result = collection.update(condition,student) #update()方法是将原条件和修改后的数据传入
+print(result)  #返回的是字典类型 
+#官方推荐 update_one()但是如果使用update_one()方法，第二个参数就不能传入字典，
+#应该用$类型操作符作为字典的键名,示例如下：
+result = collection.update_one(condition,{'$set':student})
+
+#删除
+#删除的话，可以直接用remove(）方法，符合条件的数据全部删除
+#这里依然推荐两个官方推荐方法  delete_one() 和 delete_many()
+results = collection.delete_many({'age':{'$gt':20}})
+print(results)  #返回的字典形式
+print(results.deleted_count)  #删除的个数
+
+
+
+
+
+
+
+
+
+
