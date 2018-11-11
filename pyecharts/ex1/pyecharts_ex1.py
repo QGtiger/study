@@ -22,8 +22,9 @@ print(df1.index)
 
 bar=Bar(title,'Profit and loss situation')
 #提供更多使用工具  is_more_utils=True
-bar.add('Profit',index,dtvalue1,is_more_utils=True)
-bar.add('loss',index,dtvalue1)
+#is_convert x轴和y轴转换
+bar.add('Profit',index,dtvalue1,is_more_utils=True,is_legend_show=True,is_convert=True,is_stack=True)
+bar.add('loss',index,dtvalue1,is_convert=True,is_stack=True)
 
 env = create_default_environment('png')
 
