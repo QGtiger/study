@@ -4,7 +4,10 @@ Time:2018.11.7
 note:pyecharts的学习
 """
 import numpy as np
-from pyecharts import Pie
+from pyecharts import Pie,Page
+
+page = Page()
+
 attr=['衬衫','羊毛衫','雪纺衫','裤子','高跟鞋','袜子']
 v1=[np.random.randint(10,20) for _ in range(6)]
 v2=[np.random.randint(10,20) for _ in range(6)]
@@ -20,4 +23,21 @@ pie.use_theme('dark')
 pie.add('商品A',attr,v1,center=[25,50],is_random=True,radius=[30,75],rosetype='radius')
 pie.add('商品B',attr,v2,center=[75,50],is_random=True,radius=[30,75],rosetype='area',is_legend_show=True,is_label_show=True)
 
-pie.render(r'E:\python_project\pyecharts\ex4.png')
+page.add(pie)
+
+pie2 = Pie('各类电影中好片所占的比例','数据来自豆瓣',title_pos='center',title_top='bottom',width=900)
+pie2.use_theme('dark')
+pie2.add("",["剧情",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[10,30],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["奇幻",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[30,30],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None, legend_pos='left')
+pie2.add("",["爱情",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[50,30],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["惊悚",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[70,30],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["冒险",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[90,30],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["动作",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[10,70],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["喜剧",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[30,70],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["科幻",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[50,70],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+pie2.add("",["悬疑",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[70,70],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None)
+#is_legend_show 是显示该颜色是哪种属性  legend_pos就是它的现实位置
+pie2.add("",["犯罪",""],[np.random.randint(10,30),np.random.randint(70,90)],center=[90,70],radius=[18,24],label_pos='center',is_label_show=True, label_text_color=None, is_legend_show=True, legend_top="center")
+
+page.add(pie2)
+page.render(r'E:\python_project\pyecharts\ex4.html')
