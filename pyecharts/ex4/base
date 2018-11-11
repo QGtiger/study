@@ -1,0 +1,6 @@
+#is_legend_show 是显示该颜色是哪种属性  legend_pos就是它的现实位置
+#is_datazoom_show 显示下方可调整的属性
+#visual_range 是视觉范围，默认0-100
+#visual_text_color 字体颜色
+#symbol_size 图中圆点大小
+# is_visualmap=True 是地图显示颜色多样性(基本必须的)
