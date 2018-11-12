@@ -1,0 +1,34 @@
+"""
+author:lightfish
+Time:2018.11.12
+note:对time模块中的strptime函数的简单介绍
+"""
+Python time strptime()方法
+
+time.strptime(string[, format])
+#返回struct_time对象。
+#日期的格式化符号请看base
+#实例：
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+ 
+import time
+ 
+struct_time = time.strptime("30 Nov 00", "%d %b %y")
+print ("返回的元组: %s " % struct_time)
+#以上输出实例：
+返回的元组: time.struct_time(tm_year=2000, tm_mon=11, tm_mday=30, tm_hour=0, tm_min=0, tm_sec=0, tm_wday=3, tm_yday=335, tm_isdst=-1) 
+
+#问题，如何得知2018.11.11 这一天使星期几
+
+
+#上面那个问题可以通过time模块的另一个函数，time.strftime()函数
+#time.strftime()是对struct_time对象进行格式化，这样就可以选取其中的想要的数据
+
+p = time.strptime('2018/11/11','%Y/%m/%d')
+print(time.strftime('%A',p))
+#输出Sunday 也就是星期天
+
+
+#time.gmtime()函数的介绍
+#Python time gmtime() 函数将一个时间戳转换为UTC时区（0时区）的struct_time
