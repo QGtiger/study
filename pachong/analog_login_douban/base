@@ -1,0 +1,5 @@
+"""
+author:lightfish
+Time:2018.11.13
+note:豆瓣模拟登录和自动写短评,利用了requests的session，向服务端发送POST请求
+"""
