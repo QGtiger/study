@@ -1,0 +1,20 @@
+"""
+author:lightfish
+Time:2018.11.14
+note:you-get第三方封装库的基本使用
+"""
+
+#安装
+pip install you-get
+
+#命令行
+#查看后面b站视频的基本信息
+you-get -i https://www.bilibili.com/video/av35813804/?spm_id_from=333.334.b_63686965665f7265636f6d6d656e64.19
+
+# -o 后面加下载的地址
+#如下就是下载到E盘目录下
+you-get -o E:\you-get\video  https://www.bilibili.com/video/av35813804/?spm_id_from=333.334.b_63686965665f7265636f6d6d656e64.19
+
+# -O 后面就是修改下载的文件名
+
+# -u 获取视频的真实地址
