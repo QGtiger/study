@@ -1,0 +1,13 @@
+"""
+author:lightfish
+Time:2018.11.14
+note:baiduyun验证
+result = client.basicGeneral(image,options)
+options = {
+    #定义图像方向
+    'detect_direction':'true',
+    #识别的语言类型,默认中英文
+    'language_type':'CHN_ENG',
+    #
+}
+"""
