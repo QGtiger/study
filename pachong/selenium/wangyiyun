@@ -1,0 +1,113 @@
+"""
+author:lightfish
+Time:2018.11.15
+note:爬去网易云音乐的评论
+"""
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from bs4 import BeautifulSoup
+import re
+import pymongo
+import time
+import requests
+from bson.objectid import ObjectId
+
+browser = webdriver.Chrome()
+wait = WebDriverWait(browser,10)
+
+index_url = 'https://music.163.com/#/'
+
+def get_gender(user_url):
+    try:
+        browser.switch_to_window(browser.window_handles[1])
+    except:
+        browser.execute_script('window.open()')
+        browser.switch_to_window(browser.window_handles[1])
+    browser.get(index_url+user_url)
+    browser.switch_to_frame('g_iframe')
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'.u-icn')))
+    html = browser.page_source
+    soup = BeautifulSoup(html,'lxml')
+    try:
+        gener = soup.find(attrs={'class':'u-icn'}).attrs['class']
+    except:
+        return 'none'
+    if gener[2] == 'u-icn-01':
+        return 'male'
+    if gener[2] == 'u-icn-00':
+        return 'none'
+    if gener[2] == 'u-icn-02':
+        return 'female'
+
+def get_page(url,page):
+    browser.switch_to_window(browser.window_handles[0])
+    if page > 1:
+        next_btn = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.znxt')))
+        next_btn.click()
+        browser.switch_to.frame('g_iframe')
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.itm')))
+        # time.sleep(3)
+        html = browser.page_source
+        # print(html)
+        soup = BeautifulSoup(html, 'lxml')
+        music_name = soup.find(attrs={'class': 'f-ff2'}).get_text()
+        print("正在爬去" + music_name + "...")
+        items = soup.find_all(attrs={'class': 'itm'})
+        info = {}
+        for item in items:
+            user_url = item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).find('a').attrs['href']
+            info['_id'] = ObjectId()
+            info['nickname'] = \
+            item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).get_text().split('：')[0]
+            info['content'] = \
+            item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).get_text().split('：')[1]
+            info['gender'] = get_gender(user_url)
+            if info['nickname'] == '帐号已注销':
+                continue
+            print(info['gender'] + info['nickname'] + ':' + info['content'])
+            save_to_mongodb(music_name, info)
+        page += 1
+        get_page(url, page)
+    else:
+        browser.get(url)
+        browser.switch_to.frame('g_iframe')
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.itm')))
+        # time.sleep(3)
+        html = browser.page_source
+        # print(html)
+        soup = BeautifulSoup(html, 'lxml')
+        music_name = soup.find(attrs={'class': 'f-ff2'}).get_text()
+        print("正在爬去" + music_name + "...")
+        items = soup.find_all(attrs={'class': 'itm'})
+        info = {}
+        for item in items:
+            user_url = item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).find('a').attrs['href']
+            info['_id'] = ObjectId()
+            info['nickname'] = item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).get_text().split('：')[0]
+            info['content'] = item.find(attrs={'class': 'cntwrap'}).find(attrs={'class': 'f-brk'}).get_text().split('：')[1]
+            info['gender'] = get_gender(user_url)
+            if info['nickname'] == '帐号已注销':
+                continue
+            print(info['gender'] + info['nickname'] + ':' + info['content'])
+            save_to_mongodb(music_name, info)
+        page+=1
+        get_page(url,page)
+
+
+
+def save_to_mongodb(name,data):
+    client = pymongo.MongoClient(host='localhost',port=27017)
+    db = client['mydb']
+    collection = db[name]
+    collection.insert_one(data)
+
+
+if __name__=='__main__':
+    #get_gender('https://music.163.com/#/user/home?id=466740224')
+    music_name = input('Please input the music_url:')
+    get_page(music_name,page=1)
+
+
