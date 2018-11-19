@@ -1,0 +1,17 @@
+"""
+author:lightfish
+Time:2018.11.19
+note:爬取网易云音乐
+"""
+import urllib.request
+import requests
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.chrome.options import Options
+import time
+from bs4 import BeautifulSoup
+import re
+import os
