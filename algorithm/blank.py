@@ -166,7 +166,10 @@ if __name__ == '__main__':
     Pn = int(input("请输入要模拟的进程数量n:"))
     bool = [False for _ in range(Pn)]
     # 得到可利用资源向量Available
-    Available = eval(input("请输入系统初始资源信息，输入格式为dict,如'{'A':10, 'B':10, 'C':10}' :"))
+    a = input("请输入系统初始资源信息:")
+    a1 = re.findall('\d+', a)
+    Available = {'A': int(a1[0]), 'B': int(a1[1]), 'C': int(a1[2])}
+    print('资源数为：',Available)
     # 得到输入每个进程对每种资源的最大需求、已经获得的数量、每种类型资源的数目
     print("---------即将开始输入Max的信息---------' ")
     Max = []
@@ -194,6 +197,7 @@ if __name__ == '__main__':
     Need =bank_need(Allocation, Max)#计算得到初次分配后的need矩阵
     print(pd.DataFrame(Need))
 
+    print('安全序列：')
     list=[]
     find_list(Available,Need,Allocation,list,Pn,bool)
 
