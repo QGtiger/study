@@ -7,7 +7,7 @@ import copy
 import re
 import pandas as pd
 
-
+count = 0 #安全序列的总数
 
 #初始化函数
 def bank_init():
@@ -148,7 +148,10 @@ def find_list(work,need,allocation,list,p,b,c=0):
             find_list(work,need,allocation,list,p,b,i)
             work = sub_resouce(work,allocation[i])
     if not False in b:
-        print(list)
+        global count
+        count += 1
+        for j,i in enumerate(list):
+            print('P{}'.format(i),end='->') if j!=len(list)-1 else print('P{}'.format(i))
     b[c]=False
     if list == []:
         return
@@ -157,6 +160,21 @@ def find_list(work,need,allocation,list,p,b,c=0):
     return
 
 
+def print_resource(Max,Allocation,Need,Available):
+    print('     Max       Allocation       Need        Available')
+    for i in range(len(Max)+1):
+        print('P{}  '.format(i-1),end='') if i >= 1 else print('    ',end='')
+        for j in ['A','B','C']:
+            print(Max[i-1][j] if i!=0 else j,end=' ' if j != 'C' else '       ')
+        for j in ['A','B','C']:
+            print(Allocation[i-1][j] if i!=0 else j,end='  ' if j != 'C' else '       ')
+        for j in ['A','B','C']:
+            print(Need[i-1][j] if i!=0 else j,end='  ' if j != 'C' else '       ')
+        if i <= 1:
+            for j in ['A','B','C']:
+                print(Available[j] if i!=0 else j,end='  ')
+
+        print()
 
 if __name__ == '__main__':
     print("---------本程序用于演示银行家算法---------")
@@ -181,7 +199,7 @@ if __name__ == '__main__':
         max={'A':int(m1[0]),'B':int(m1[1]),'C':int(m1[2])}
 
         Max.append(max)
-    print(pd.DataFrame(Max))
+    #print(pd.DataFrame(Max))
     print("---------即将开始输入Allocation的信息---------' ")
     Allocation = []
     for i in range(0,Pn):
@@ -191,38 +209,60 @@ if __name__ == '__main__':
         allo={'A':int(a1[0]),'B':int(a1[1]),'C':int(a1[2])}
 
         Allocation.append(allo)
-    print(pd.DataFrame(Allocation))
+    #print(pd.DataFrame(Allocation))
 
     print("---------计算得到初次分配后的Need矩阵---------' ")
     Need =bank_need(Allocation, Max)#计算得到初次分配后的need矩阵
     print(pd.DataFrame(Need))
 
-    print('安全序列：')
-    list=[]
-    find_list(Available,Need,Allocation,list,Pn,bool)
+
+    list=[] #安全序列
+
 
     # print("---------计算得到初次分配后的Available数组---------' ")
     # bank_Available(Available,Allocation)#计算得到初次分配后的Available字典
 
-    # while True:
-    #     print("---------模拟进程请求资源请输入1---------")
-    #     print("---------对系统当前状态进行诊断请输入2---------")
-    #     print("---------查看当前资源分配情况请输入3---------")
-    #     print("---------退出程序请输入quit---------")
-    #     x = input('请输入执行的功能序号x：')#提示输入
-    #     if x == '1':
-    #         print("---------即将开始模拟进程请求资源---------")
-    #         processId = int(input("请输入要模拟的进程序号n:"))
-    #         requestDict = eval(input("请输入请求资源信息，输入格式如'{'A':10, 'B':10, 'C':10}' :"))
-    #         bank_request(processId, requestDict) #模拟请求资源
-    #         print("---------模拟进程请求资源已结束---------")
-    #     elif x == '2':
-    #         print("---------即将开始诊断当前系统状态---------")
-    #         bank_safe(Available, Need, Allocation, Pn)
-    #         print("---------诊断当前系统状态已结束---------")
-    #     elif x == '3':
-    #         print("---------当前资源分配情况如下---------")
-    #         print(Allocation)
-    #     elif x=='quit':
-    #         print('程序结束运行')
-    #         break
+    while True:
+        print("---------输出当前T0时刻资源分配情况，请输入1---------")
+        print("---------获取全部安全序列，请输入2---------")
+        print("---------模拟进程发出请求向量，请输入3---------")
+        print("---------退出程序请输入quit---------")
+        x = input('请输入执行的功能序号x：')#提示输入
+        if x == '1':
+            print("---------即将开始输出当前T0时刻资源分配情况---------")
+            print_resource(Max,Allocation,Need,Available)
+            print("---------输出当前T0时刻资源分配情况已结束---------")
+        elif x == '2':
+            print("---------即将开始获取全部安全序列---------")
+            count = 0
+            print('安全序列：')
+            find_list(Available, Need, Allocation, list, Pn, bool)
+            print('总共{}条安全数列'.format(count))
+            print("---------获取全部安全序列已结束---------")
+        elif x == '3':
+            Need_req = Need.copy()
+            Allocation_req = Allocation.copy()
+            print("---------模拟进程发出请求向量---------")
+            while True:
+                p = int(input('请输入您要请求的进程：'))
+                if int(p) >= 0 and int(p) < int(Pn):
+                    break
+                print('请出入正确的进程...')
+            req = input('请输入第{}个进程对每种资源的再次请求向量：'.format(p))
+            dic_req = re.findall('\d+',req)
+            req_resource={'A':int(dic_req[0]),'B':int(dic_req[1]),'C':int(dic_req[2])}
+            if is_checked(w=req_resource,n=Need_req[p]) or is_checked(w=req_resource,n=Available):
+                print('进程P{}不能立即满足...'.format(p))
+            else:
+                print('满足进程P{}后的安全序列：'.format(p))
+                count = 0
+                list=[]
+                bool = [False for _ in range(Pn)]
+                Available_req = sub_resouce(w=Available,a=req_resource)
+                Need_req[p] = sub_resouce(w=Need_req[p],a=req_resource)
+                Allocation_req[p] = add_resource(req_resource,Allocation_req[p])
+                find_list(Available_req, Need_req, Allocation_req, list, Pn, bool)
+            print('总共{}条安全数列'.format(count))
+        elif x=='quit':
+            print('程序结束运行')
+            break
