@@ -20,3 +20,47 @@ sum(range(101))
 
 ### 4.字典如何删除键和合并两个字典
     删除用 del,合并用 update
+```
+dic = {'name':'qg','age':18}
+del dic['name']
+dic2 = {'name':'fh'}
+dic.update(dic2)
+```
+![del update](https://github.com/QGtiger/study/blob/master/Python_image/3.jpg)
+
+### 5.谈下python的GIL
+* GIL是Python的全局解释器锁，同一个进程加入由多个线程运行，一个线程在运行python程序的时候会霸占python解释器(加了一个锁即GIL)
+，使进程内的其他线程无法运行，等该线程运行完后其他线程才能运行。如果线程运行过程中遇到耗时操作，则解释器锁解开，使其他线程
+运行。所以在多线程中，线程的运行仍是有先后顺序，并不是同时运行。
+* 多进程中因为每个进程都能被喜用分批资源，相当于每个进程有了个python解释器，多以多进程可以实现多个进程的同时运行，缺点是金城系统资源开销大
+
+### 6.python实现列表去重的方法
+>熟悉使用`set`
+```
+list=[np.random.randint(10,15) for _ in range(10)]
+print(list)
+a = set(list)
+print(a)
+[i for i in a]
+```
+![set](https://github.com/QGtiger/study/blob/master/Python_image/6.jpg)
+
+### 7.fun(*args,**kwargs)中*args，**kwargs是什么意思？
+* *args和*kwargs主要用于函数的定义。你可以将不定数量的参数传递给一个函数。这里的不定的意思是：预先并不知道，函数使用者会传递多少个参数给你，所以在这个场景下使用这两个关键字。*args是用来发送一个非键值对的可变数量的参数列表给一个函数。这里有一个例子
+```
+def demo(args_f,*args_v):
+    print(args_f)
+    for x in args_v:
+        print(x)
+demo('a','b','c','d',e')
+```
+![*args](https://github.com/QGtiger/study/blob/master/Python_image/7.jpg)
+
+* **kwargs 允许你将不定长度的键值对传递给一个函数。如果你想要一个函数里处理带名字的参数，你因该使用**kwargs，这里有一个例子
+```
+def demo(**args_v):
+    for k,v in args_v.items():
+        print(k,v)
+demo(name='light',name='fish)
+```
+![*kwargs](https://github.com/QGtiger/study/blob/master/Python_image/7-2.jpg)
