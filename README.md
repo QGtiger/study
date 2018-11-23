@@ -100,3 +100,50 @@ Test()
 print('这是A的ID',id(Test))
 ```
 ![__new__](https://github.com/QGtiger/study/blob/master/Python_image/11.jpg)
+
+### 12.列表[1,2,3,4,5],请使用map函数输出[1,4,9,16,25],并使用列表推导式提取出大于10的数
+* `map()`函数的第一个参数是fun
+* `map()`生成的生成器，只能使用一次
+```
+list1 = list(range(1,6))
+res = map(lambda x: x**2,list1)
+res_list = [i for i in res if i > 10]
+```
+![map](https://github.com/QGtiger/study/blob/master/Python_image/12.jpg)
+
+### 13.python中生成随机数的若干方法
+* random.uniform(a,b) 闭区间取浮点数,a,b可换序
+* random.randint(q,b) 闭区间取整型数，a,b不可换序
+* random.randrange(a,b,c) b开,取a向上递增2数的随机数
+* random.choice('12345asd?"') 随机取数
+* random.sample('abcdefg',3) 随机取三个数
+
+### 14.避免转义给字符串加什么字符表示原是字符串？
+* `r`,表示需要原始字符串
+
+### 15.python中断言的方法
+* assert()方法，断言成功程序继续运行，断言失败，则程序报错
+![assert](https://github.com/QGtiger/study/blob/master/Python_image/15.jpg)
+
+### 16.数据库中student有重复的name，消除重复，请写sql语句
+    select distinct name from studnet
+    
+### 17.10个Linux常用命令
+    ls pwd cd touch rm mkdir tree cp mv cat vi more echo grep
+
+### 18.python2和python3的区别?
+* Python3使用print必须要用小括号包裹打印内容，Python2可以使用小括号也可以空格
+* Python2 range(10) 返回的实列表，Python3返回的是迭代器，节约内存
+* Python2中使用ascii编码，Python3中使用utf-8编码
+* Python3中str表示字符串序列，byte表示字节序列
+* Python2中unicode表示字符串序列，str表示字节序列
+* Python2为了正常显示中文，要coding申明，Python3不需要
+* Python2是raw_input(),Python 是input()
+
+### 19.列出Python中可变数据和不可变数据类型，并简述原理
+* 不可变数据类型：数值型、字符串型string和元组tuple
+不允许变量的值发生变化，如果改变了变量的值，相当于创建了一个对象，而对于相同的值的对象，在内存中则只有一个对象(一个地址)
+![assert](https://github.com/QGtiger/study/blob/master/Python_image/19.jpg)
+* 可变数据类型：列表list和字典dict；
+允许变量的值发生变化，而不会新建一个对象，变量引用的对象的地址也不会发生变化，不过对于相同的值的不同对象，在内存中则会存在不同的对象，即每个对象都有自己的地址，相当于内存中对于同值的对象保存了多份，这里不存在引用计数，是实实在在的对象
+![assert](https://github.com/QGtiger/study/blob/master/Python_image/20.jpg)
