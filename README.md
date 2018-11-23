@@ -64,3 +64,25 @@ def demo(**args_v):
 demo(name='light',name='fish)
 ```
 ![*kwargs](https://github.com/QGtiger/study/blob/master/Python_image/7-2.jpg)
+
+### 8.python2和python3的range的区别
+```python2返回一个列表，python3返回一个迭代器，节约内存```
+
+### 9.一句话解释什么样的语言能过用装饰器
+```函数可以作为参数传递的语言，可以使用装饰器```
+
+### 10.python内建函数类型有哪些
+* 整型 -- `int`
+* 布尔型 -- `bool`
+* 字符串 -- `str`
+* 列表 -- `list`
+* 元组 -- `tuple`
+* 字典 -- `dict`
+* 集合 -- `set`
+
+### 11.简述面向对象中__new__和__init__的区别
+* __init__是初始化方法，创建对象后，就立刻被默认调用，相当于C语言的构造函数，可接受参数，如下图：
+![__init__](https://github.com/QGtiger/study/blob/master/Python_image/11.jpg)
+* __new__至少要有一个参数cls，代表是当前类，此参数在实例化的时候由Python解释器自动识别
+* __new__必须要有返回值，返回实例化出来的实例，这点在自己实现__new__时要特别注意，可以return父类(通过super(当前类，cls)) __new__出来的实例，或者直接是object的__new__出来的实例
+* 
