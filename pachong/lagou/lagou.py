@@ -11,6 +11,13 @@ import numpy as np
 import time
 from urllib.parse import quote
 
+headers={
+            'Host':'www.lagou.com',
+            'Referer':'https://www.lagou.com/jobs/list_Python?city=%E6%9D%AD%E5%B7%9E&cl=false&fromSearch=true&labelWords=&suginput=',
+            'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36',
+            'Connection':'keep-alive'
+        }
+
 class lagou(object):
     def __init__(self,location):
         headers={
@@ -55,12 +62,16 @@ class lagou(object):
             search_data.encoding='utf-8'
             if search_data.status_code==200:
                 print('获取第{}页数据...{}%'.format(i,round(i/int(page)*100,2)))
-                #print(search_data.text)
+                print(search_data.text)
                 self._format_search_data(search_data.text)
 
 
     def _format_search_data(self,search_data):
-        search_data = json.loads(search_data)
+        try:
+            search_data = json.loads(search_data)
+        except Exception as e:
+            print(e)
+            return
         for item in search_data['content']['positionResult']['result']:
             job_data = []
             job_data.append(item['companyFullName'] if item['companyFullName'] else 'none')
@@ -71,19 +82,34 @@ class lagou(object):
             job_data.append(item['salary'] if item['salary'] else 'none')
             job_data.append(item['workYear'] if item['workYear'] else 'none')
             job_data.append(item['positionAdvantage'] if item['positionAdvantage'] else 'none')
-            print(job_data)
+            #print(job_data)
             self.search_job_data.append(job_data)
-
-        time.sleep(50)
+        print('不行太累了，我得休息下,Zzz...Zzz...Zzz...')
+        time.sleep(30)
         #print(self.search_job_data)
 
 
 if __name__=='__main__':
     kind = input('Please input what you want to get data: ')
     location = input('Please input where you want to get: ')
-    page = input('Please input how much page you want to get:')
     lagou = lagou(location)
-    lagou.search(kind,page)
+    try_data = {
+        'first': 'false',
+        'pn': '1',
+        'kd': kind
+    }
+    response =  requests.post(lagou.index_url,data=try_data,headers=headers)
+    print(response.text)
+    json_data = json.loads(response.text)
+    totalCount = json_data['content']['positionResult']['totalCount']
+    is_total_get = input('总共有{}条数据...是否全部爬取(Y/N): '.format(totalCount))
+    if is_total_get.upper() == 'Y':
+        page = int(totalCount/15)
+        lagou.search(kind,page)
+    else:
+        page = input('Please input how much page you want to get:')
+        lagou.search(kind, page)
+
     data = lagou.search_job_data
     df = pd.DataFrame(data,columns=['公司全名','公司简称','所在地','公司大小','要求学历','薪资','工作经验','福利待遇'])
     df.to_csv('{}{}工程师就业.csv'.format(location,kind),index=False)
