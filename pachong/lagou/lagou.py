@@ -31,14 +31,18 @@ class lagou(object):
         self.session.headers.update(headers)
         self.search_job_data=[]
         self.proxy_list=[]
-        #self.get_proxy()
+        self.get_proxy()
+        self.proxy={
+                'http':'http://61.160.247.63:808',
+                'https':'https://61.160.247.63:808'
+            }
 
     def get_proxy(self):
-        with open(r'C:\Users\Administrator\Desktop\proxy\proxy.txt') as f:
+        with open(r'C:\Users\Administrator\Desktop\proxy\proxy1.txt') as f:
             for line in f:
                 p = line.replace('\n','')
                 self.proxy_list.append({'http':'http://'+p,'https':'https://'+p})
-
+        print('总共有{}个代理IP'.format(len(self.proxy_list)))
         print(self.proxy_list)
 
     def search(self,kind,page):
@@ -48,19 +52,30 @@ class lagou(object):
                 'pn':str(i),
                 'kd':kind
             }
-            proxies=[
-                {'http':'http://180.118.243.244:61234','https':'https://180.118.243.244:61234'},
-                {'http':'http://122.237.105.213:80','https':'https://122.237.105.213:80'},
-                {'http':'http://111.224.100.7:808','https':'https://111.224.100.7:808'},
-                {'http':'http://61.138.33.20:808','https':'https://61.138.33.20:808'}
-            ]
-            try:
-                search_data = self.session.post(url=self.index_url,data=data)
-            except Exception as e:
-                print(e)
-                break
-            search_data.encoding='utf-8'
-            if search_data.status_code==200:
+            # proxies=[
+            #     {'http':'http://180.118.243.244:61234','https':'https://180.118.243.244:61234'},
+            #     {'http':'http://122.237.105.213:80','https':'https://122.237.105.213:80'},
+            #     {'http':'http://111.224.100.7:808','https':'https://111.224.100.7:808'},
+            #     {'http':'http://61.138.33.20:808','https':'https://61.138.33.20:808'}
+            # ]
+
+            while True:
+
+                try:
+                    search_data = self.session.post(url=self.index_url,data=data,proxies=self.proxy,timeout=5)
+                    is_get_data = json.loads(search_data.text)
+                    if is_get_data['msg'] == '您操作太频繁,请稍后再访问':
+                        raise Exception('当前IP已被禁...正在IP代理池中提取可用IP...')
+
+                    break
+                except Exception as e:
+                    print('当前IP已被禁...正在IP代理池中提取可用IP...')
+                    self.proxy = random.choice(self.proxy_list)
+                    print('当前代理' + str(self.proxy))
+
+
+            search_data.encoding = 'utf-8'
+            if search_data.status_code == 200:
                 print('获取第{}页数据...{}%'.format(i,round(i/int(page)*100,2)))
                 print(search_data.text)
                 self._format_search_data(search_data.text)
@@ -85,7 +100,7 @@ class lagou(object):
             #print(job_data)
             self.search_job_data.append(job_data)
         print('不行太累了，我得休息下,Zzz...Zzz...Zzz...')
-        time.sleep(30)
+        #time.sleep(30)
         #print(self.search_job_data)
 
 
