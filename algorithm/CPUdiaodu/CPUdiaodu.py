@@ -26,11 +26,19 @@ def gantetu(name, df):
     ax = plt.gca()
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
+    #判断是否选中过颜色
+    is_select=[False for _ in range(10)]
     for i in range(len(df)):
         pcolor = int(re.search('\d+',df.iloc[i]['进程']).group())
-        plt.broken_barh([(int(df.iloc[i]['到达时间']), int(df.iloc[i]['服务时间']))], [
-                        0, 1], facecolors=color[pcolor], label='进程 ' + df.iloc[i]['进程'])
-        plt.text(df.iloc[i]['到达时间'], 1.1, df.iloc[i]['进程'])
+        if is_select[pcolor] == False:
+            plt.broken_barh([(int(df.iloc[i]['到达时间']), int(df.iloc[i]['服务时间']))], [
+                            0, 1], facecolors=color[pcolor], label='进程 ' + df.iloc[i]['进程'])
+            plt.text(df.iloc[i]['到达时间'], 1.1, df.iloc[i]['进程'])
+        else:
+            plt.broken_barh([(int(df.iloc[i]['到达时间']), int(df.iloc[i]['服务时间']))], [
+                0, 1], facecolors=color[pcolor])
+            plt.text(df.iloc[i]['到达时间'], 1.1, df.iloc[i]['进程'])
+        is_select[pcolor] = True
     plt.legend()
     plt.show()
 
@@ -80,6 +88,7 @@ if __name__ == '__main__':
             end = time.clock()
             print(df)
             print('调试时间:{}s'.format(end - start))
+            print('平均等待时间: {}'.format( sum(d2) / int(Pn)))
             is_look = input('是否展示甘特图(Y/N): ')
             color = (
                 "turquoise",
@@ -98,6 +107,7 @@ if __name__ == '__main__':
             print('---------模拟抢占式短作业优先调试...---------')
             Pn = input('请输入要模拟的进程数量: ')
             p = []
+            pp =[]
             min_reach_time = 100
             max_time = 0
             for i in range(int(Pn)):
@@ -110,6 +120,7 @@ if __name__ == '__main__':
                 processn = Process(i, *[int(inprocess1[i])
                                         for i in range(len(inprocess1[:2]))])
                 p.append(processn)
+                pp.append(processn)
             p.sort(key=lambda x: x.reach_time)
             running_process = []
             running_time = []
@@ -161,7 +172,13 @@ if __name__ == '__main__':
                     len(get_process))]
             print(df)
             print('调试时间:{}s'.format(end - start))
-
+            sum = 0
+            print(len(df))
+            for i in range(len(df['到达时间'])):
+                n = int(df.iloc[i]['进程'][1])
+                sum += int(df.iloc[i]['到达时间']) - int(pp[n].reach_time)
+                pp[n].reach_time = int(df.iloc[i]['到达时间']) + int(df.iloc[i]['服务时间'])
+            print('平均等待时间:{}'.format(sum / int(Pn)))
             is_look = input('是否展示甘特图(Y/N): ')
             color = (
                 "turquoise",
@@ -232,12 +249,15 @@ if __name__ == '__main__':
             Pn = input('请输入要模拟的进程数量: ')
             num = int(input('请输入每个时间片消耗的资源时间: '))
             p = []
+            pp = []
             for i in range(int(Pn)):
                 inprocess = input('请输入P{}进程的服务时间: '.format(i))
                 inprocess1 = re.findall(r'\d+', inprocess)
                 processn = Process(i, 0, *[int(inprocess1[i])
                                            for i in range(len(inprocess1[:1]))])
                 p.append(processn)
+                pp.append(processn)
+
             start = time.clock()
             d1 = []
             d2 = []
@@ -264,6 +284,13 @@ if __name__ == '__main__':
             df.index = ['第{}次调度'.format(i + 1) for i in range(len(d1))]
             print(df)
             print('调试时间:{}s'.format(end - start))
+            sum = 0
+            print(len(df))
+            for i in range(len(df['到达时间'])):
+                n = int(df.iloc[i]['进程'][1])
+                sum += int(df.iloc[i]['到达时间']) - int(pp[n].reach_time)
+                pp[n].reach_time = int(df.iloc[i]['到达时间']) + int(df.iloc[i]['服务时间'])
+            print('平均等待时间:{}'.format(sum / int(Pn)))
             is_look = input('是否展示甘特图(Y/N): ')
             color = (
                 "turquoise",
