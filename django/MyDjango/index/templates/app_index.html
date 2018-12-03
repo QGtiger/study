@@ -1,0 +1,49 @@
+{% load static %}
+<! DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>title</title>
+        <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    </head>
+    <body>
+    {% if error.error %}
+    {{ error.error }}
+    {% endif %}
+    <div>
+        <a class="old" href="/2018.html">2018 old Archive</a>
+    </div>
+    {% if from.errors %}
+    <p>数据出错啦,错误信息：{{ from.errors }}</p>
+    {% endif %}
+    <div>
+        <form action="" method="POST">
+        {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+        <button type="submit" class="btn" >Submit</button>
+    </form>
+    </div>
+
+    <div>
+        {% for m in month %}
+        <a style="display:block" href="{% url 'myyear' 2333 %}">2018 {{ m }} Archive</a>
+        {% endfor %}
+    </div>
+    <ul class="u1">
+            {% for type in type_list %}
+            <li>
+                <h3><a href="#">{{ type.type_name }}</a></h3>
+                <p>
+                    {% for name in name_list %}
+                        {% if name.type_id == type.id %}
+                            <span class="book_type_type">{{ name.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </p>
+            </li>
+            {% endfor %}
+    </ul>
+    </body>
+</html>
